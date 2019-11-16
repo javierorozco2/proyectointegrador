@@ -16,10 +16,7 @@ botonsalir = pygame.image.load("menu/botonsalir.png")
 botonsalir2 = pygame.image.load("menu/botonsalir2.png")
 botonajustes = pygame.image.load("menu/botonajustes.png")
 botonajustes2 = pygame.image.load("menu/botonajustes2.png")
-clic = pygame.mixer.Sound("sonidos/clic.ogg")
-soundDisPlom= pygame.mixer.Sound("sonidos/disparo.ogg")
-soundGameover = pygame.mixer.Sound("sonidos/gameover.ogg")
-sonidofondo = pygame.mixer.music.load("sonidos/fondo.mp3")
+
 bala = pygame.image.load("nivel1/arma.png")
 balaenemigo = pygame.image.load("nivel1/proyectil.png")
 reloj = pygame.time.Clock()
@@ -32,8 +29,13 @@ miFuente = pygame.font.Font(None,50)
 miFuentepeque = pygame.font.Font(None,25)
 
 #Sonidos y musica
+clic = pygame.mixer.Sound("sonidos/clic.ogg")
+soundDisPlom= pygame.mixer.Sound("sonidos/disparo.ogg")
+soundGameover = pygame.mixer.Sound("sonidos/gameover.ogg")
+sonidofondo = pygame.mixer.music.load("sonidos/fondo.mp3")
 pygame.mixer.music.play(100)
 pygame.mixer.music.set_volume(.25)
+
 
 class Plomero(pygame.sprite.Sprite):
     def __init__(self,x,y):
