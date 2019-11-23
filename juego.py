@@ -16,21 +16,25 @@ botonsalir = pygame.image.load("menu/botonsalir.png")
 botonsalir2 = pygame.image.load("menu/botonsalir2.png")
 botonajustes = pygame.image.load("menu/botonajustes.png")
 botonajustes2 = pygame.image.load("menu/botonajustes2.png")
+bala = pygame.image.load("nivel1/arma.png")
+balaenemigo = pygame.image.load("nivel1/proyectil.png")
+reloj = pygame.time.Clock()
+tubo1=pygame.image.load("nivel1/tubo.png")
+tubo2=pygame.image.load("nivel1/tubo2.png")
+tubo3=pygame.image.load("nivel1/tubo3.png")
+
+#Fuentes de letra
+miFuente = pygame.font.Font(None,50)
+miFuentepeque = pygame.font.Font(None,20)
+
+#Sonidos y musica
 clic = pygame.mixer.Sound("sonidos/clic.ogg")
 soundDisPlom= pygame.mixer.Sound("sonidos/disparo.ogg")
 soundGameover = pygame.mixer.Sound("sonidos/gameover.ogg")
 sonidofondo = pygame.mixer.music.load("sonidos/fondo.mp3")
-bala = pygame.image.load("nivel1/arma.png")
-balaenemigo = pygame.image.load("nivel1/proyectil.png")
-reloj = pygame.time.Clock()
-
-#Fuentes de letra
-miFuente = pygame.font.Font(None,50)
-miFuentepeque = pygame.font.Font(None,25)
-
-#Sonidos y musica
 pygame.mixer.music.play(100)
 pygame.mixer.music.set_volume(.25)
+
 
 class Plomero(pygame.sprite.Sprite):
     def __init__(self,x,y):
@@ -45,8 +49,8 @@ class Plomero(pygame.sprite.Sprite):
         self.izquierda={}
         self.derecha={}
         self.i=1
-        self.cont=4
-        self.p=6
+        self.cont=0
+        self.p=4
 
         self.direccion=True
         self.salto=False
@@ -71,7 +75,10 @@ class Plomero(pygame.sprite.Sprite):
             self.saltoPar=True
         elif teclado[K_RIGHT] and self.salto==False and self.saltoPar==False:
             self.direccion=True
-            self.rect.x+=5
+            if self.rect.x<=1020:
+                self.rect.x+=5
+            else:
+                self.rect.x=1020
             self.cont+=0.5
             if self.cont==self.p:
                 self.i=0
@@ -84,7 +91,10 @@ class Plomero(pygame.sprite.Sprite):
                 self.cont=0
         elif teclado[K_LEFT] and self.salto==False and self.saltoPar==False:
             self.direccion=False
-            self.rect.x-=5
+            if self.rect.x>=0:
+                self.rect.x-=5
+            else:
+                self.rect.x=0
             self.cont+=0.5
             if self.cont==self.p:
                 self.i=0
@@ -121,11 +131,28 @@ class Plomero(pygame.sprite.Sprite):
         if self.saltoPar==True and self.salto==False and self.direccion==True:
             self.i=0
             if self.bajadaPar==False:
-                self.rect.y-=15
-                self.rect.x+=10
+                if self.rect.x<=1020:
+                    self.rect.y-=15
+                    self.rect.x+=10
+                else:
+                    if self.rect.y<=450:
+                        self.rect.y+=5
+                    else:
+                        self.bajadaPar=False
+                        self.saltoPar=False
+                        self.i=1
+
             if self.bajadaPar==True:
-                self.rect.y+=15
-                self.rect.x+=10
+                if self.rect.x <=1020:
+                    self.rect.y+=15
+                    self.rect.x+=10
+                else:
+                    if self.rect.y<=450:
+                        self.rect.y+=5
+                    else:
+                        self.bajadaPar=False
+                        self.saltoPar=False
+                        self.i=1
             if self.rect.y==300:
                 self.bajadaPar=True
             if self.rect.y==450:
@@ -151,6 +178,38 @@ class Plomero(pygame.sprite.Sprite):
             screen.blit(self.sheet, (self.rect.x, self.rect.y),(self.derecha[self.i]))
         if self.direccion==False:
             screen.blit(self.sheet, (self.rect.x, self.rect.y),(self.izquierda[self.i]))
+
+class tubo(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image=pygame.image.load("nivel1/tubo.png")
+        self.rect = self.image.get_rect()
+        self.rect.x=randint(20,1050)
+        self.rect.y=550
+
+        self.tubos={}
+        self.crono=(pygame.time.get_ticks()/1000)
+        self.i=0
+        self.cont=1
+        self.unlado=True
+
+        self.tubos[0]=tubo1
+        self.tubos[1]=tubo2
+        self.tubos[2]=tubo3
+    def update(self,screen):
+        screen.blit(self.tubos[self.i],self.rect)
+    def cambioimagen(self,crono,aux):
+        if crono==self.cont and self.unlado==True:
+            self.cont+=1
+            self.i+=1 
+            if self.i==2:
+                self.unlado=False   
+        if crono==self.cont and self.unlado==False:
+            self.cont+=1
+            self.i-=1 
+            if self.i==0:
+                self.unlado=True          
 
 class enemigo(pygame.sprite.Sprite):
 	def __init__(self,posx,posy):
@@ -463,6 +522,26 @@ def perdiste(enjuego):
         cursor1.update()
         pygame.display.update()
 
+def hitoria():
+
+    pygame.init()
+    screen=pygame.display.set_mode((1080,720))
+    pygame.display.set_caption("Plumber Jumper: Historia")
+
+    fondo=pygame.image.load("hitorias/historia1inicio.png")
+    cursor1=cursor()
+    reloj1=pygame.time.Clock()
+    enjuego=True
+    while enjuego==True:
+        screen.blit(fondo,(0,0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+        reloj1.tick(30)
+        cursor1.update()
+        pygame.screen.update()
+
 def nivel1():
 
     pygame.init()
@@ -503,6 +582,7 @@ def nivel1():
 
     vidaenemigo=100
     vidaplomero=10
+    tubosrecog=0
 
     lista_plomero=pygame.sprite.Group()
     lista_bloques=pygame.sprite.Group()
@@ -517,6 +597,14 @@ def nivel1():
     litrosagua=100
     crono2=pygame.time.get_ticks()/1000
     color=(0,255,0)
+
+    #Variables de tuberias
+    tuberia1=tubo()
+    tuberia2=tubo()
+    tuberia3=tubo()
+    random1=randint(5,95)
+    random2=randint(5,95)
+    random3=randint(5,95)
 
     while enjuego==False:
 
@@ -535,20 +623,25 @@ def nivel1():
         textovidaenemigo=miFuente.render(str(vidaenemigo),0,(255,255,255))
         textovidaplomero=miFuente.render(str(vidaplomero),0,(255,255,255))
         textolitroagua=miFuente.render(str(litrosagua),0,(color))
-        textoaguadisp=miFuentepeque.render("LITROS DE",0,(255,255,255))
-        textoaguadisp2=miFuentepeque.render("AGUA DISPONIBLE :",0,(255,255,255))
+        textoaguadisp=miFuentepeque.render("LITROS DE",0,(255,155,0))
+        textoaguadisp2=miFuentepeque.render("AGUA DISPONIBLE :",0,(255,155,0))
+        textotubos=miFuente.render(str(tubosrecog),0,(255,255,255))
+        textotubos2=miFuente.render("/ 3",0,(255,255,255))
 
         screen.blit(fondo,(0,0))
-        screen.blit(barravidapersonaje,(10,20))
-        screen.blit(barraagua,(10,100))
-        screen.blit(barratubos,(10,185))
+        screen.blit(barravidapersonaje,(-30,20))
+        screen.blit(barraagua,(-30,100))
+        screen.blit(barratubos,(-30,185))
         screen.blit(barraenemigo,(832,80))
         screen.blit(llavedeagua,(950,510))
         screen.blit(textovidaenemigo,(960,94))
-        screen.blit(textovidaplomero,(150,35))
-        screen.blit(textolitroagua,(200,125))
-        screen.blit(textoaguadisp,(100,125))
-        screen.blit(textoaguadisp2,(28,140))
+        screen.blit(textovidaplomero,(110,35))
+        screen.blit(textolitroagua,(135,125))
+        screen.blit(textoaguadisp,(25,125))
+        screen.blit(textoaguadisp2,(0,140))
+        screen.blit(textotubos,(110,203))
+        screen.blit(textotubos2,(140,203))
+
 
         if litrosagua<=100 and litrosagua>75:      
             screen.blit(agua100,(952,560))
@@ -560,6 +653,25 @@ def nivel1():
             screen.blit(agua25,(240,562))
         else:
             screen.blit(agua5,(0,562))
+
+        #TUBERIAS
+        if litrosagua<=random1:
+            tuberia1.update(screen)
+            if plomero.rect.colliderect(tuberia1.rect):
+                tuberia1.rect.x=2000
+                tubosrecog+=1
+        if litrosagua<=random2:
+            tuberia2.update(screen)
+            if plomero.rect.colliderect(tuberia2.rect):
+                tuberia2.rect.x=2000
+                tubosrecog+=1
+        if litrosagua<=random3:
+            tuberia3.update(screen)
+            if plomero.rect.colliderect(tuberia3.rect):
+                tuberia3.rect.x=2000
+                tubosrecog+=1
+
+
 
         #Disparo enemigo
         lista_bloques.add(enemigo1)
@@ -607,9 +719,14 @@ def nivel1():
         if vidaplomero==0 or litrosagua==0:
             perdiste(enjuego)
 
+        
+
         print event
         plomero.eventos()
         plomero.update(screen)
+        tuberia1.cambioimagen(crono,aux)
+        tuberia2.cambioimagen(crono,aux)
+        tuberia3.cambioimagen(crono,aux)
         enemigo1.dibujar(screen)
         lista_proyectilenemigo.update(screen)
         lista_proyectiles.update(screen)
