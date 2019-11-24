@@ -152,7 +152,7 @@ class Plomero(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
         self.sheet = pygame.image.load('personajes/plomero/plomero.png')
-        self.sheet.set_clip(pygame.Rect(215, 0, 50, 159))
+        self.sheet.set_clip(pygame.Rect(140, 0, 50, 130)) #215, - , -, 159
         self.image = self.sheet.subsurface(self.sheet.get_clip())
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -190,7 +190,7 @@ class Plomero(pygame.sprite.Sprite):
             if self.rect.x<=1020:
                 self.rect.x+=5
             else:
-                self.rect.x=1020
+                pass
             self.cont+=0.5
             if self.cont==self.p:
                 self.i=0
@@ -206,7 +206,7 @@ class Plomero(pygame.sprite.Sprite):
             if self.rect.x>=0:
                 self.rect.x-=5
             else:
-                self.rect.x=0
+                pass
             self.cont+=0.5
             if self.cont==self.p:
                 self.i=0
@@ -514,7 +514,7 @@ class cursor(pygame.Rect):
 
 def main():
     pygame.init()
-    pygame.mixer.music.set_volume(.25)
+    #pygame.mixer.music.set_volume(.25)
     pygame.display.set_caption("Plumber Jumper")
     screen = pygame.display.set_mode((1080,720)) 
     pygame.display.set_icon(icon_surf)
@@ -657,7 +657,7 @@ def Menujugar():
                     tutorial()
                 if cursor1.colliderect(boton3.rect):
                     clic.play()
-                    nivel2()
+                    historia2()
                 if cursor1.colliderect(boton4.rect):
                     clic.play()
                     nivel3()
@@ -727,11 +727,16 @@ def menu2():
         cursor1.update()
         pygame.display.update()
 
-def pausa():
+def pausa(nivel):
     pausado = True
+    Nivel=nivel
     screen = pygame.display.set_mode((1080,720))
-    fondo = pygame.image.load("nivel1/nivel1.png")
-    
+    if Nivel==1:
+        fondo = pygame.image.load("nivel1/nivel1.png")
+    if Nivel==2:
+        fondo = pygame.image.load("nivel2/nivel2.png")
+    if Nivel==3:
+        fondo = pygame.image.load("nivel1/nivel3.png")
     fondopausa = pygame.image.load("pausa/fondopausa.png")
     botoninicio = pygame.image.load("pausa/botoninicio.png")
     botoninicio2 = pygame.image.load("pausa/botoninicio2.png")
@@ -772,7 +777,7 @@ def pausa():
         boton1.update(screen,cursor1)
         boton2.update(screen,cursor1)
         boton3.update(screen,cursor1)
-        reloj1.tick(30)
+        reloj1.tick(60)
         cursor1.update()
         pygame.display.update()
 
@@ -797,14 +802,14 @@ def perdiste(enjuego):
                 if event.key == pygame.K_ESCAPE:
                     main()
 
-        reloj1.tick(30)
+        reloj1.tick(60)
         cursor1.update()
         pygame.display.update()
 
 def perdiste2(enjuego):
     enjuego=False
     screen = pygame.display.set_mode((1080,720))
-    fondo = pygame.image.load("perdiste/perdistelvl1.png")
+    fondo = pygame.image.load("perdiste/perdistelvl2.png")
 
     cursor1=cursor()
     reloj1=pygame.time.Clock()
@@ -822,7 +827,7 @@ def perdiste2(enjuego):
                 if event.key == pygame.K_ESCAPE:
                     main()
 
-        reloj1.tick(30)
+        reloj1.tick(60)
         cursor1.update()
         pygame.display.update()
 
@@ -857,7 +862,7 @@ def ganaste1(enjuego):
             if event.type==pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(boton.rect):
                     clic.play()
-                    nivel2()
+                    historia2()
                 if cursor1.colliderect(boton2.rect):
                     clic.play()
                     pygame.quit()
@@ -866,7 +871,7 @@ def ganaste1(enjuego):
         #print event
         boton.update(screen,cursor1)
         boton2.update(screen,cursor1)
-        reloj1.tick(30)
+        reloj1.tick(60)
         cursor1.update()
         pygame.display.update()
 
@@ -910,7 +915,7 @@ def ganaste2(enjuego):
         #print event
         boton.update(screen,cursor1)
         boton2.update(screen,cursor1)
-        reloj1.tick(30)
+        reloj1.tick(60)
         cursor1.update()
         pygame.display.update()
 
@@ -991,7 +996,59 @@ def historia1():
 
         #print event
         boton1.update(screen,cursor1)
-        reloj1.tick(30)
+        reloj1.tick(60)
+        cursor1.update()
+        pygame.display.update()
+
+def historia2():
+
+    pygame.init()
+    screen=pygame.display.set_mode((1080,720))
+    pygame.display.set_caption("Plumber Jumper: botones para jugar")
+
+    fondo=pygame.image.load("historias/historia2segundonivel.png")
+    fondo2=pygame.image.load("historias/historia2segundonivel2.png")
+    letras= pygame.image.load("historias/letrahistoria.png")
+
+    botonnext = pygame.image.load("historias/botonplay.png")
+    botonnext2 = pygame.image.load("historias/botonplay2.png")
+
+    boton11 = pygame.image.load("historias/botonnext.png")
+    boton22 = pygame.image.load("historias/botonnext2.png")
+
+    boton1=Boton(botonnext,botonnext2,930,590)
+    boton2=Boton(boton11,boton22,930,590)
+
+    siguiente=False
+
+    cursor1=cursor()
+    reloj1=pygame.time.Clock()
+    enjuego=True
+    while enjuego==True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                if cursor1.colliderect(boton1.rect) and siguiente==True:
+                    clic.play()
+                    nivel2()
+                if cursor1.colliderect(boton2.rect) and siguiente==False:
+                    clic.play()
+                    siguiente=True
+                    
+
+        #print event
+        if siguiente==False:
+            screen.blit(fondo,(0,0))
+        if siguiente==True:
+            screen.blit(fondo2,(0,0))
+        screen.blit(letras,(0,0))
+        if siguiente==True:
+            boton1.update(screen,cursor1)
+        if siguiente==False:
+            boton2.update(screen,cursor1)
+        reloj1.tick(60)
         cursor1.update()
         pygame.display.update()
 
@@ -1166,7 +1223,7 @@ def nivel1():
                 sys.exit(0)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pausa()
+                    pausa(1)
                 if event.key == pygame.K_x:
                     movimientobala=True
                     soundDisPlom.play()
@@ -1182,7 +1239,7 @@ def nivel1():
             if event.type==pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(boton1.rect):
                     clic.play()
-                    pausa()
+                    pausa(1)
 
         #COLISIONES DE BALAS
         if vidaenemigo>0:
@@ -1441,7 +1498,7 @@ def nivel2():
                 sys.exit(0)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pausa()
+                    pausa(2)
                 if event.key == pygame.K_x:
                     movimientobala=True
                     soundDisPlom.play()
@@ -1463,7 +1520,7 @@ def nivel2():
             if event.type==pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(boton1.rect):
                     clic.play()
-                    pausa()
+                    pausa(2)
 
         #COLISIONES DE BALAS
         if vidaenemigo>0:
@@ -1499,7 +1556,7 @@ def nivel2():
             screen.blit(mensaje3,(plomero.rect.x+50,plomero.rect.y-50))
 
 
-        print event
+        #print event
         if quitlona==False:
             cartel.update(screen,0)
         if ponlona==True:
@@ -1508,15 +1565,13 @@ def nivel2():
         plomero.eventos()
         plomero.update(screen)
         tuberia1.cambioimagen(crono,aux)
-        tuberia2.cambioimagen(crono,aux)
-        tuberia3.cambioimagen(crono,aux)
         if vidaenemigo>0:
             enemigo1.dibujar(screen)
             enemigo1.cambioimagen(crono,aux)
             lista_proyectilenemigo.update(screen)
         lista_proyectiles.update(screen)
         boton1.update(screen,cursor1)
-        reloj1.tick(59)
+        reloj1.tick(60)
         cursor1.update()
         pygame.display.update()
 
@@ -1668,7 +1723,7 @@ def nivel3():
                 sys.exit(0)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pausa()
+                    pausa(3)
                 if event.key == pygame.K_x:
                     movimientobala=True
                     soundDisPlom.play()
@@ -1684,7 +1739,7 @@ def nivel3():
             if event.type==pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(boton1.rect):
                     clic.play()
-                    pausa()
+                    pausa(3)
 
         #COLISIONES DE BALAS
         for proyectil in lista_proyectiles:
