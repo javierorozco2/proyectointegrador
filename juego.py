@@ -53,6 +53,22 @@ class Cartel(pygame.sprite.Sprite):
     def update(self,screen,i):
         screen.blit(self.listaimag[i],self.rect)
 
+class Cartel2(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image=pygame.image.load("nivel3/cartel1.png")
+        self.rect=self.image.get_rect()
+
+        self.rect.x=x
+        self.rect.y=y
+
+        self.listaimag={}
+        self.listaimag[0]=pygame.image.load("nivel3/cartel1.png")
+        self.listaimag[1]=pygame.image.load("nivel3/cartel2.png")
+
+    def update(self,screen,i):
+        screen.blit(self.listaimag[i],self.rect)
+
 class personaventana(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
@@ -132,6 +148,80 @@ class personaventana(pygame.sprite.Sprite):
             screen.blit(self.imgPersona[self.i],self.rect)
         else:
             screen.blit(self.Mcarreteragua[2],(self.rect.x-70,self.rect.y+60))
+
+class personaventana2(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image=pygame.image.load("nivel3/animacion/p6.png")
+        self.rect=self.image.get_rect()
+        self.rect.x=x
+        self.rect.y=y
+
+        self.mov=True
+        self.cont=0
+        self.p=6
+
+        self.lstpersonas={}
+        self.lstpersonas[0]=pygame.image.load("nivel3/animacion/p1.png")
+        self.lstpersonas[1]=pygame.image.load("nivel3/animacion/p2.png")
+        self.lstpersonas[2]=pygame.image.load("nivel3/animacion/p3.png")
+        self.lstpersonas[3]=pygame.image.load("nivel3/animacion/p4.png")
+        self.lstpersonas[4]=pygame.image.load("nivel3/animacion/p5.png")
+        self.lstpersonas[5]=pygame.image.load("nivel3/animacion/p6.png")
+        self.i=0
+
+        self.basura=False
+        self.lstbasura={}
+        self.i2=0
+        self.basuraabajo=False
+        self.BposY=self.rect.y
+        self.lstbasura[0]=pygame.image.load("nivel3/animacion/b.png")
+        self.lstbasura[1]=pygame.image.load("nivel3/animacion/b1.png")
+        self.lstbasura[2]=pygame.image.load("nivel3/animacion/b2.png")
+
+        self.cont2=0
+        self.i3=0
+        self.lstagua={}
+        self.agua=False
+        self.lstagua[0]=pygame.image.load("nivel3/animacion/m3.png")
+        self.lstagua[1]=pygame.image.load("nivel3/animacion/m2.png")
+        self.lstagua[2]=pygame.image.load("nivel3/animacion/m1.png")
+
+        self.activarpesona=True
+    def update(self,screen):
+        #-------------------MOVIMIENTO DE PERSONA-----------------------------
+        if self.mov==True:
+            self.cont+=1
+        if self.cont==self.p or self.cont==self.p*2 or self.cont==self.p*3 or self.cont==self.p*4 or self.cont==self.p*7:
+            self.i+=1
+        if self.cont==self.p*7:
+            self.basuraabajo=True
+        #-------------------MOVIMIENTO DE BASURA------------------------------
+        if self.cont>=self.p*7 and self.cont<=self.p*11 and self.basuraabajo==True:
+            screen.blit(self.lstbasura[self.i2],(self.rect.x+40,self.rect.y+55))
+
+        if self.cont>=self.p*11 and self.basuraabajo==True:
+            self.BposY+=1
+            screen.blit(self.lstbasura[self.i2],(self.rect.x+40,self.BposY+55)) 
+            if self.BposY==560-75:
+                self.i2=2
+            if self.BposY==550-75:
+                self.i2=1
+            if self.BposY==570-75:
+                self.activarpesona=False
+                self.basuraabajo=False
+                self.agua=True
+        #-------------------MOVIMIENTO DE AGUA----------------------------------
+        if self.agua==True:
+            self.cont2+=1
+            screen.blit(self.lstagua[self.i3],(self.rect.x,self.BposY+55))
+        if self.cont2==self.p:
+            self.i3+=1
+        if self.cont2==self.p*2:
+            self.i3+=1
+
+        if self.activarpesona==True:
+            screen.blit(self.lstpersonas[self.i],self.rect)
 
 class llavedeagua(pygame.sprite.Sprite):
     def __init__(self,x,y):
@@ -435,6 +525,71 @@ class enemigo2(pygame.sprite.Sprite):
             if self.i==0:
                 self.unlado=True      
 
+class enemigo3(pygame.sprite.Sprite):
+    def __init__(self,posx,posy):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.imagen = pygame.image.load('nivel3/burbuja/burbuja1.png')
+        self.rect = self.imagen.get_rect()
+
+        self.imagenb1 = pygame.image.load('nivel3/burbuja/burbuja1.png')
+        self.imagenb2 = pygame.image.load('nivel3/burbuja/burbuja2.png')
+        self.imagenb3 = pygame.image.load('nivel3/burbuja/burbuja3.png')
+        self.imagenb4 = pygame.image.load('nivel3/burbuja/burbuja4.png')
+        self.imagenb5 = pygame.image.load('nivel3/burbuja/burbuja5.png')
+        self.imagenb6 = pygame.image.load('nivel3/burbuja/burbuja6.png')
+
+        self.listaDisparo = []
+
+        self.lstburbuja={}
+        self.lstburbuja[0]=self.imagenb1
+        self.lstburbuja[1]=self.imagenb2
+        self.lstburbuja[2]=self.imagenb3
+        self.lstburbuja[3]=self.imagenb4
+        self.lstburbuja[4]=self.imagenb5
+        self.lstburbuja[5]=self.imagenb6
+        self.i=0
+
+        self.velocidad = 20
+        self.rect.top = posy
+        self.rect.left = posx
+
+        self.arriba = True
+        self.veloz = 3
+
+        self.imgmovi=True
+
+        self.cont=0
+        self.p=6
+    def cambioimagen(self):
+        if self.imgmovi==True:
+            self.cont+=1
+        if self.cont==self.p:
+            self.i+=1
+        if self.cont==self.p*2:
+            self.i+=1
+        if self.cont==self.p*3:
+            self.i+=1
+        if self.cont==self.p*4:
+            self.i+=1
+        if self.cont==self.p*5:
+            self.i+=1
+        if self.cont==self.p*6:
+            self.i+=1
+            self.i=0
+            self.cont=0
+
+    def dibujar (self,screen):
+        if self.arriba == True:
+            self.rect.top = self.rect.top - self.veloz
+            if self.rect.top < 150:
+                self.arriba = False
+        else:
+            self.rect.top = self.rect.top + self.veloz
+            if self.rect.top > 500:
+                self.arriba = True
+        screen.blit(self.lstburbuja[self.i], self.rect)
+
 class Proyectil(pygame.sprite.Sprite):
     """ Esta clase representa al proyectil . """
     def __init__(self,x,y):
@@ -479,6 +634,8 @@ class Proyectilenemigo2(pygame.sprite.Sprite):
             self.image = balaenemigo
         if nivel==2:
             self.image = pygame.image.load("nivel2/proyectil2.png")
+        if nivel==3:
+            self.image = pygame.image.load("nivel3/proyectil3.png")
         self.rect=self.image.get_rect()
 
         self.rect.x=x
@@ -660,7 +817,7 @@ def Menujugar():
                     historia2()
                 if cursor1.colliderect(boton4.rect):
                     clic.play()
-                    nivel3()
+                    historia3()
 
             if event.type == QUIT:
                 pygame.quit()
@@ -831,6 +988,31 @@ def perdiste2(enjuego):
         cursor1.update()
         pygame.display.update()
 
+def perdiste3(enjuego):
+    enjuego=False
+    screen = pygame.display.set_mode((1080,720))
+    fondo = pygame.image.load("perdiste/perdistelvl3.png")
+
+    cursor1=cursor()
+    reloj1=pygame.time.Clock()
+    soundGameover.play()
+    youlose=True
+    while youlose==True:
+        screen.blit(fondo,(0,0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    nivel3()
+                if event.key == pygame.K_ESCAPE:
+                    main()
+
+        reloj1.tick(60)
+        cursor1.update()
+        pygame.display.update()
+
 def ganaste1(enjuego):
     enjuego=False
     screen = pygame.display.set_mode((1080,720))
@@ -906,7 +1088,49 @@ def ganaste2(enjuego):
             if event.type==pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(boton.rect):
                     clic.play()
-                    nivel3()
+                    historia3()
+                if cursor1.colliderect(boton2.rect):
+                    clic.play()
+                    pygame.quit()
+                    sys.exit(0)
+
+        #print event
+        boton.update(screen,cursor1)
+        boton2.update(screen,cursor1)
+        reloj1.tick(60)
+        cursor1.update()
+        pygame.display.update()
+
+def ganaste3(enjuego):
+    enjuego=False
+    screen = pygame.display.set_mode((1080,720))
+    fondo = pygame.image.load("nivel3/final.png")
+
+    boton1 = pygame.image.load("pausa/botoninicio.png")
+    boton2 = pygame.image.load("pausa/botoninicio2.png")
+
+    salir = pygame.image.load("pausa/botonsalir.png")
+    salir2 = pygame.image.load("pausa/botonsalir2.png")
+
+    cursor1=cursor()
+    reloj1=pygame.time.Clock()
+
+    boton=Boton(boton1,boton2,50,590)
+    boton2=Boton(salir,salir2,200,590)
+
+    soundwin.play()
+
+    youlose=True
+    while youlose==True:
+        screen.blit(fondo,(0,0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                if cursor1.colliderect(boton.rect):
+                    clic.play()
+                    main()
                 if cursor1.colliderect(boton2.rect):
                     clic.play()
                     pygame.quit()
@@ -1033,6 +1257,58 @@ def historia2():
                 if cursor1.colliderect(boton1.rect) and siguiente==True:
                     clic.play()
                     nivel2()
+                if cursor1.colliderect(boton2.rect) and siguiente==False:
+                    clic.play()
+                    siguiente=True
+                    
+
+        #print event
+        if siguiente==False:
+            screen.blit(fondo,(0,0))
+        if siguiente==True:
+            screen.blit(fondo2,(0,0))
+        screen.blit(letras,(0,0))
+        if siguiente==True:
+            boton1.update(screen,cursor1)
+        if siguiente==False:
+            boton2.update(screen,cursor1)
+        reloj1.tick(60)
+        cursor1.update()
+        pygame.display.update()
+
+def historia3():
+
+    pygame.init()
+    screen=pygame.display.set_mode((1080,720))
+    pygame.display.set_caption("Plumber Jumper: Historia")
+
+    fondo=pygame.image.load("historias/historia3tercernivel.png")
+    fondo2=pygame.image.load("historias/historia3tercernivel2.png")
+    letras= pygame.image.load("historias/letrahistoria.png")
+
+    botonnext = pygame.image.load("historias/botonplay.png")
+    botonnext2 = pygame.image.load("historias/botonplay2.png")
+
+    boton11 = pygame.image.load("historias/botonnext.png")
+    boton22 = pygame.image.load("historias/botonnext2.png")
+
+    boton1=Boton(botonnext,botonnext2,930,590)
+    boton2=Boton(boton11,boton22,930,590)
+
+    siguiente=False
+
+    cursor1=cursor()
+    reloj1=pygame.time.Clock()
+    enjuego=True
+    while enjuego==True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                if cursor1.colliderect(boton1.rect) and siguiente==True:
+                    clic.play()
+                    nivel3()
                 if cursor1.colliderect(boton2.rect) and siguiente==False:
                     clic.play()
                     siguiente=True
@@ -1579,31 +1855,34 @@ def nivel3():
 
     pygame.init()
 
-    fondo = pygame.image.load("nivel1/nivel3.png")
+    #-----------------CARGA DE IMAGENES-------------------------
+    fondo = pygame.image.load("nivel3/nivel3.png")
     barravidapersonaje = pygame.image.load("nivel1/barravidapersonaje.png")     
-    barraagua = pygame.image.load("nivel1/barraporcentajeagua.png")
+    barraagua = pygame.image.load("nivel3/barratiempo.png")
     barratubos = pygame.image.load("nivel1/barratubos.png")
     barraenemigo = pygame.image.load("nivel1/barravidaenemigo.png")
-    llavedeagua = pygame.image.load("nivel1/llavedeagua.png") 
     botonpausa = pygame.image.load("pausa/botonpausa.png")
     botonpausa2 = pygame.image.load("pausa/botonpausa2.png")
+    #MENSAJES:
+        #RECOGE LOS TUBOS
+    mensaje1=pygame.image.load("nivel1/cierrallave3.png")
+        #IR AL CARTEL
+    mensaje2=pygame.image.load("nivel3/mensaje1.png")
+        #QUITAR LONA
+    mensaje3=pygame.image.load("nivel2/mensaje1.png")
+        #PONER LONA
+    mensaje4=pygame.image.load("nivel3/mensaje2.png")
 
-    agua100=pygame.image.load("nivel1/agua100porciento.png")
-    agua75= pygame.image.load("nivel1/agua75porciento.png")
-    agua50= pygame.image.load("nivel1/agua50porciento.png")
-    agua25= pygame.image.load("nivel1/agua25porciento.png")
-    agua5= pygame.image.load("nivel1/agua5porciento.png")
-
-    #Pantalla
+    #------------------VENTANA-------------------
     screen = pygame.display.set_mode((1080,720))
     pygame.display.set_caption("Plumber Jumper: Nivel 1")
 
-    #Personaje 
+    #-----------------Personaje----------------- 
     plomero=Plomero(20,450)
+    plomero2=pygame.image.load("nivel3/plomero.png")
 
-    #Enemigo
-    enemigo1= enemigo(800, 400)
-
+    #------------------Enemigo------------------
+    enemigo1= enemigo3(800, 450)
 
     reloj1=pygame.time.Clock()
     boton1=Boton(botonpausa,botonpausa2,980,10)
@@ -1621,13 +1900,14 @@ def nivel3():
     lista_bloques=pygame.sprite.Group()
     lista_proyectiles=pygame.sprite.Group()
     lista_proyectilenemigo=pygame.sprite.Group()
+    lista_personas=pygame.sprite.Group()
 
     enjuego=False
     movimientobala=False
 
     #Variables del agua
     aux=1
-    litrosagua=100
+    litrosagua=50
     crono2=pygame.time.get_ticks()/1000
     color=(0,255,0)
 
@@ -1635,59 +1915,90 @@ def nivel3():
     tuberia1=tubo()
     tuberia2=tubo()
     tuberia3=tubo()
-    random1=randint(5,95)
-    random2=randint(5,95)
-    random3=randint(5,95)
+    random1=randint(5,50)
+    random2=randint(5,50)
+    random3=randint(5,50)
 
+    cartel=Cartel2(455,310)
+    quitlona=False
+    ponlona=False
+
+    cargar=True
+    cargar2=True
+    cargar3=True
+    cargar4=True
+    cargar5=True
+
+    cargartubos=False
+    plomeroedif=False
+    nxtmensajes=False
+    msg4=True
     while enjuego==False:
-
+        #-----------------------CRONOMETRO-----------------------
         crono=(pygame.time.get_ticks()/1000)-crono2
-        if crono==aux:
+        if crono==aux and quitlona==False:
             aux+=1
-            litrosagua-=2
+            litrosagua-=1
 
         if litrosagua==50:
             color=(255,128,0)
         elif litrosagua==20:
             color=(255,0,0)
 
+        #-------------------PERSONA TIRANDO BASURA----------------
+        if ponlona==False:
+            if aux==1:
+                if cargar==True:
+                    persona=personaventana2(randint(20,740),410)
+                    lista_personas.add(persona)
+                    cargar=False
+            if aux==10:
+                if cargar2==True:
+                    persona=personaventana2(randint(20,740),410)
+                    lista_personas.add(persona)
+                    cargar2=False
+            if aux==20:
+                if cargar3==True:
+                    persona=personaventana2(randint(20,740),410)
+                    lista_personas.add(persona)
+                    cargar3=False
+            if aux==30:
+                if cargar4==True:
+                    persona=personaventana2(randint(20,740),410)
+                    lista_personas.add(persona)
+                    cargar4=False
+            if aux==40:
+                if cargar5==True:
+                    persona=personaventana2(randint(20,740),410)
+                    lista_personas.add(persona)
+                    cargar5=False
+            if litrosagua>0 and aux>=83:
+                litrosagua-=0.2
+                if litrosagua<=0:
+                    litrosagua=0
 
 
+        #-------------------------LETRAS------------------------------
         textovidaenemigo=miFuente.render(str(vidaenemigo),0,(255,255,255))
         textovidaplomero=miFuente.render(str(vidaplomero),0,(255,255,255))
         textolitroagua=miFuente.render(str(litrosagua),0,(color))
-        textoaguadisp=miFuentepeque.render("LITROS DE",0,(255,155,0))
-        textoaguadisp2=miFuentepeque.render("AGUA DISPONIBLE :",0,(255,155,0))
         textotubos=miFuente.render(str(tubosrecog),0,(255,255,255))
         textotubos2=miFuente.render("/ 3",0,(255,255,255))
-
+        textofinal=miFuente.render("PRESIONA 'F' PARA TERMINAR EL JUEGO",0,(255,255,255))
+        #-----------------------CARGA DE IMAGENES---------------------
         screen.blit(fondo,(0,0))
         screen.blit(barravidapersonaje,(-30,20))
         screen.blit(barraagua,(-30,100))
         screen.blit(barratubos,(-30,185))
         screen.blit(barraenemigo,(832,80))
-        screen.blit(llavedeagua,(950,510))
         screen.blit(textovidaenemigo,(960,94))
         screen.blit(textovidaplomero,(110,35))
-        screen.blit(textolitroagua,(135,125))
-        screen.blit(textoaguadisp,(25,125))
-        screen.blit(textoaguadisp2,(0,140))
+        screen.blit(textolitroagua,(110,125))
         screen.blit(textotubos,(110,203))
         screen.blit(textotubos2,(140,203))
+        lista_personas.update(screen)
 
-
-        if litrosagua<=100 and litrosagua>75:      
-            screen.blit(agua100,(952,560))
-        elif litrosagua<=75 and litrosagua>50:
-            screen.blit(agua75,(785,560))
-        elif litrosagua<=50 and litrosagua>25:
-            screen.blit(agua50,(458,562))
-        elif litrosagua<=25 and litrosagua>10:
-            screen.blit(agua25,(240,562))
-        else:
-            screen.blit(agua5,(0,562))
-
-        #TUBERIAS
+        #-------------------------TUBERIAS--------------------------
         if litrosagua<=random1:
             tuberia1.update(screen)
             if plomero.rect.colliderect(tuberia1.rect):
@@ -1706,78 +2017,139 @@ def nivel3():
                 sonidotubo.play()
                 tuberia3.rect.x=2000
                 tubosrecog+=1
+        #----------------COLISION DE TUBERIAS-------------------
+        if cargartubos==True:
+            tuberia1.update(screen)
+            if plomero.rect.colliderect(tuberia1.rect):
+                sonidotubo.play()
+                tuberia1.rect.x=2000
+                tubosrecog+=1
+        if cargartubos==True:
+            tuberia2.update(screen)
+            if plomero.rect.colliderect(tuberia2.rect):
+                sonidotubo.play()
+                tuberia2.rect.x=2000
+                tubosrecog+=1
+        if cargartubos==True:
+            tuberia3.update(screen)
+            if plomero.rect.colliderect(tuberia3.rect):
+                sonidotubo.play()
+                tuberia3.rect.x=2000
+                tubosrecog+=1
 
 
 
-        #Disparo enemigo
+        #-------------------Disparo enemigo-------------------------
         lista_bloques.add(enemigo1)
         lista_plomero.add(plomero)
 
         if (randint(0,50)<rangodisparo):
-            pryenemigo=Proyectilenemigo(enemigo1.rect.x,enemigo1.rect.y,2)
+            pryenemigo=Proyectilenemigo2(enemigo1.rect.x,enemigo1.rect.y-90,3)
             lista_proyectilenemigo.add(pryenemigo)
 
+        #-------------EVENTOS-----------------
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit(0)
             if event.type == pygame.KEYDOWN:
+                #BOTON PAUSA
                 if event.key == pygame.K_ESCAPE:
                     pausa(3)
+                #TECLA DISPARO
                 if event.key == pygame.K_x:
                     movimientobala=True
                     soundDisPlom.play()
                     proyectil = Proyectil(plomero.rect.x+50,plomero.rect.y+80)
                     x = proyectil.rect.x
                     lista_proyectiles.add(proyectil)
-
+                #TECLA REINICIAR JUEGO
                 if event.key == pygame.K_r:
                     plomero.rect.y=460
                     plomero.rect.x=20
                     enjuego=True
+                #LONA
+                if event.key == pygame.K_c and vidaenemigo<=0:
+                    quitlona=True
 
+                if event.key == pygame.K_v and vidaenemigo<=0:
+                    ponlona=True
+                    msg4=False
+
+                if event.key == pygame.K_a and vidaenemigo<=0:
+                    plomeroedif=True
+                    nxtmensajes=True
+                if event.key == pygame.K_f and vidaenemigo<=0 and ponlona==True:
+                    ganaste3(enjuego)
+            #BOTON PAUSA
             if event.type==pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(boton1.rect):
                     clic.play()
                     pausa(3)
 
-        #COLISIONES DE BALAS
-        for proyectil in lista_proyectiles:
-            lista_bloques_alcanzados = pygame.sprite.spritecollide(proyectil,lista_bloques,True)
-            for enemigo1 in lista_bloques_alcanzados:
-                lista_proyectiles.remove(proyectil)
-                vidaenemigo-=2
-                movimientobala=False
-        for pryenemigo in lista_proyectilenemigo:
-            colisiondebalaenpersonaje = pygame.sprite.spritecollide(pryenemigo,lista_plomero,True)
-            for plomero in colisiondebalaenpersonaje:
-                lista_proyectilenemigo.remove(pryenemigo)
-                vidaplomero-=1
-                movimientobala=False
+        #------------------COLISIONES DE BALAS---------------------
+        if vidaenemigo>0:
+            for proyectil in lista_proyectiles:
+                lista_bloques_alcanzados = pygame.sprite.spritecollide(proyectil,lista_bloques,True)
+                for enemigo1 in lista_bloques_alcanzados:
+                    lista_proyectiles.remove(proyectil)
+                    vidaenemigo-=2
+                    movimientobala=False
+        if vidaenemigo>0:
+            for pryenemigo in lista_proyectilenemigo:
+                colisiondebalaenpersonaje = pygame.sprite.spritecollide(pryenemigo,lista_plomero,True)
+                for plomero in colisiondebalaenpersonaje:
+                    lista_proyectilenemigo.remove(pryenemigo)
+                    vidaplomero-=1
+                    movimientobala=False
+        if vidaenemigo>0:
+            if plomero.rect.colliderect(enemigo1.rect):
+                vidaplomero-=0.1
 
-        if plomero.rect.colliderect(enemigo1.rect):
-            vidaplomero-=0.1
-
-        #GANAR O PERDER
+        #-------------------GANAR O PERDER------------------------------
         if vidaplomero<=0 or litrosagua==0:
-            perdiste(enjuego)
+            perdiste3(enjuego)
+        if vidaenemigo<=0 and ponlona==True and tubosrecog>=3:
+            screen.blit(textofinal,(200,650))
 
-        
 
-        #print event
-        plomero.eventos()
-        plomero.update(screen)
+        #------------ACTUALIZACION DE CLASES Y EXTRAS EN PANTALLA------
+        if plomeroedif==True:
+            screen.blit(plomero2,(400,410))
+
+        if vidaenemigo<=0:
+            cargartubos=True
+
+        if quitlona==False:
+            cartel.update(screen,0)
+        if ponlona==True:
+            cartel.update(screen,1)
+
+        if plomeroedif==False:
+            plomero.eventos()
+            plomero.update(screen)
+            lista_proyectiles.update(screen)
+
         tuberia1.cambioimagen(crono,aux)
-        tuberia2.cambioimagen(crono,aux)
-        tuberia3.cambioimagen(crono,aux)
-        enemigo1.dibujar(screen)
-        lista_proyectilenemigo.update(screen)
-        lista_proyectiles.update(screen)
+        if vidaenemigo>0:
+            enemigo1.dibujar(screen)
+            enemigo1.cambioimagen()
+            lista_proyectilenemigo.update(screen)
+        #----------------------MENSAJES---------------------------------
+        if vidaenemigo<=0 and tubosrecog<3 and quitlona==False:
+            screen.blit(mensaje1,(plomero.rect.x+50,plomero.rect.y-50))
+        if vidaenemigo<=0 and tubosrecog>=3 and plomero.rect.y>=400 and nxtmensajes==False:
+            screen.blit(mensaje2,(plomero.rect.x+50,plomero.rect.y-50))
+        if vidaenemigo<=0 and nxtmensajes==True and quitlona==False:
+            screen.blit(mensaje3,(415,400))
+        if vidaenemigo<=0 and quitlona==True and msg4==True:
+            screen.blit(mensaje4,(415,400))
+
         boton1.update(screen,cursor1)
         reloj1.tick(60)
         cursor1.update()
         pygame.display.update()
-
+#---------------------------------------------------------------------
 main()
 
 
