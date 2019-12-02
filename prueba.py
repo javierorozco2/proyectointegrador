@@ -772,7 +772,7 @@ def Ajustes():
         boton7.update(screen,cursor1)
 
         cursor1.update()
-        print (event)
+        #print (event)
         reloj.tick(30)        
         pygame.display.update()
 
@@ -828,7 +828,7 @@ def Menujugar():
         boton3.update(screen,cursor1)
         boton4.update(screen,cursor1)
 
-        print (event)
+        #print (event)
         reloj.tick(20)
         cursor1.update()
         pygame.display.update()
